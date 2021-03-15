@@ -6,7 +6,7 @@
 /*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:46:03 by julmarti          #+#    #+#             */
-/*   Updated: 2021/03/11 15:12:27 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 17:04:14 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ int			main()
 	int		i;
 
 	line = NULL;
-	fd = open("capital", O_RDONLY);
+	fd = open("test.txt", O_RDONLY);
 	while ((i = get_next_line(fd, &line)) > 0)
 	{
 		ft_putendl((unsigned char *)line);
 		free(line);
 		printf("%d\n", i);
 	}
+	if (line != NULL)
 	ft_putendl((unsigned char *)line);
 	printf("%d\n", i);
 	free(line);

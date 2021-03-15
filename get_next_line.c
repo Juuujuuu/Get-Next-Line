@@ -6,37 +6,44 @@
 /*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:13:44 by julmarti          #+#    #+#             */
-/*   Updated: 2021/03/15 12:26:05 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 17:05:44 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <string.h>
-#define BUFFER_SIZE 100
+#include <stdio.h>
+#define BUFFER_SIZE 12 // constante symbolique 
 
 int		get_next_line(int fd, char **line)
 {
 	int		i;
-	int		j;
 	size_t	retread;
-	char	*str_save;
+	char	*buf;
 	static char	*tmp;
 
-	i = 0;
-	retread = read(fd, *line, BUFFER_SIZE);
-	if (!line || fd < 0 || retread < 0 ) //si on a un fd negatif (erreur)  ou si read échoue,
+	buf = malloc(sizeof(char) * BUFFER_SIZE);
+	if (!buf || !line || fd < 0) //si on a un fd negatif (erreur) ou si read échoue,
 		return (-1); // alors return -1 pour signifier une erreur
+	retread = read(fd, buf, BUFFER_SIZE);
+	printf("%s %d %d \n", buf, fd, BUFFER_SIZE);
 	if (retread == 0) // si on a atteint la fin du fichier
 		return(0);
 	else
 	{
-		while (retread > 0) // tant que la fonction read lit qqch 
-		if (strchr(*line, '\n') != NULL)// si j'ai un \n 
+		i = 0;
+		if (ft_strchr(buf, '\n') != NULL)// si j'ai un \n 
 		{
-			line[i][j] = str_save[j]; // copier ce qui a ete read dans line 
-			tmp = ft_strdup(str_save); // on copie ce qu'il y a apres le \n
-			ft_strjoin(str_save, tmp);//join le buffer avec tmp;
+			*line[i] = buf[i]; // copier ce qui a ete read dans line 
+			tmp = ft_strdup(buf); // on copie ce qu'il y a apres le \n
+			ft_strjoin(buf, tmp);//join le buffer avec tmp;
+			i++; // j'avance dans buf
 		}
-		return (1);
+		else // si j'ai pas de ligne (car pas de \n)
+		{
+			*line[i] = buf[i];//je copie le contenu dans line
+			i++;
+		}
 	}
+	return (1);
 }

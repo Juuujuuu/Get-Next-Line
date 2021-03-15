@@ -6,11 +6,21 @@
 /*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:16:24 by julmarti          #+#    #+#             */
-/*   Updated: 2021/03/15 12:21:03 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 15:13:18 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+
+size_t	ft_strlen(const char *s)
+{
+	size_t i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
 char	*ft_strchr(const char *s, int c)
 {
