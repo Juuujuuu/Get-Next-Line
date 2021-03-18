@@ -6,11 +6,12 @@
 /*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:16:24 by julmarti          #+#    #+#             */
-/*   Updated: 2021/03/15 15:13:18 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/03/18 17:18:15 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "get_next_line.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -103,4 +104,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	str[i + j] = '\0';
 	return (str);
+}
+
+t_list	*ft_lstnew(void *content)
+{
+	t_list *element;
+
+	element = malloc(sizeof(t_list));
+	if (!element)
+		return(NULL);
+	if (element)
+	{
+		element->content = content;
+		element->next = NULL;
+	}
+	return (element);
 }
