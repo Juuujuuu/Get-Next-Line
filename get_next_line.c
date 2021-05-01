@@ -6,7 +6,7 @@
 /*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:13:44 by julmarti          #+#    #+#             */
-/*   Updated: 2021/05/01 18:32:00 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/05/01 18:37:32 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*readline(int fd, char *buf)
 int		get_next_line(int fd, char **line)
 {
 	int				i;
-	char			buf[BUFFER_SIZE + 1]; // ?
+	char			buf[BUFFER_SIZE + 1]; // contient ce qui est à lire/ a été lu, c'est le même buf que dans la fonction read
 	static char		*tmp; // variable statique dont la valeur est issue de la fonction readline
 	
 	tmp = readline(fd, buf); // on a donc la ligne qui a été lue, pas ce qui suit. Que la ligne. 
@@ -69,7 +69,7 @@ int		get_next_line(int fd, char **line)
 			line[0][i] = tmp[i]; // copier ce qui a ete read dans line 
 			i++; // j'avance dans buf
 		}
-		ft_strjoin(*line, buf);//join le buffer avec tmp;
+		ft_strjoin(*line, buf);//;
 		line[0][i] = '\0';// j'ajoute un marqueur qui montre la fin de la ligne lors de mon précédent appel 
 	}
 	return (1);
