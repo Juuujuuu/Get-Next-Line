@@ -6,7 +6,7 @@
 /*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:13:44 by julmarti          #+#    #+#             */
-/*   Updated: 2021/05/01 18:37:32 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/05/01 18:39:39 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ int		get_next_line(int fd, char **line)
 		*line = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		while (tmp[i] != '\0') // tant que j'ai pas fini de lire toute la ligne sauvegardée précédement
 		{
-			line[0][i] = tmp[i]; // copier ce qui a ete read dans line 
-			i++; // j'avance dans buf
+			line[0][i] = tmp[i]; // copier la ligne dans line 
+			i++; 
 		}
-		ft_strjoin(*line, buf);//;
+		ft_strjoin(*line, buf);// je veux joindre la ligne + ce qui a été lu en trop selon BUFFER_SIZE mais je ne sais pas encore comment faire
 		line[0][i] = '\0';// j'ajoute un marqueur qui montre la fin de la ligne lors de mon précédent appel 
 	}
 	return (1);
