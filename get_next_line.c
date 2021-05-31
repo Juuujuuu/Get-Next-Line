@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bemoreau <bemoreau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:13:44 by julmarti          #+#    #+#             */
-/*   Updated: 2021/05/31 17:02:21 by bemoreau         ###   ########.fr       */
+/*   Updated: 2021/05/31 21:15:22 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <string.h>
 #include <stdio.h>
-#define BUFFER_SIZE 20// constante symbolique
+#define BUFFER_SIZE 10// constante symbolique
 
 // fonction qui sauvegarde ce qui a ete lu en trop 
 char 	*savemore(size_t i, char *buf)
@@ -21,15 +21,12 @@ char 	*savemore(size_t i, char *buf)
 	char *save;
 	size_t j;
 
-	save = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	save = malloc(sizeof(char) * BUFFER_SIZE + 1); //A PROTEGER
 	j = 0;
-	while (buf[i] != '\0') // tant que je ne suis pas arrive a la fin de ce que j'ai lu
+	while (buf[i] != '\0') // tant que je ne suis pas arrivée a la fin de ce que j'ai lu
 	{
-		if (buf[i] != '\n') // si je n'ai pas une ligne complete
-		{
-			save[j] = buf[i]; // je copie les elements en rab dans ma static save, pour le prochain appel
-			j++;
-		}
+		save[j] = buf[i]; // je copie les éléments en rab dans ma static save, pour le prochain appel
+		j++;
 		i++;
 	}
 	save[j] = '\0';
@@ -38,7 +35,7 @@ char 	*savemore(size_t i, char *buf)
 }
 
 // fonction qui read et retourne la ligne (entièrement ou non). Renvoie a save ce qui n'est pas une ligne
-char	*readline(int fd, char *buf, char *save)
+char	*readline(int fd, char *buf, char **save)
 {
 	size_t		i;
 	size_t		j;
@@ -49,12 +46,12 @@ char	*readline(int fd, char *buf, char *save)
 	i = 0;
 	j = 0;
 	k = 0;
-	tmp = malloc(sizeof(char) * (ft_strlen(save) + BUFFER_SIZE + 1)); // A PROTEGER
-	if (save != NULL) // si j ai un bout de phrase sauvegarde d'un precedent appel, je ne reread pas tout de suite
+	tmp = malloc(sizeof(char) * (ft_strlen(*save) + BUFFER_SIZE + 1)); // A PROTEGER
+	if (*save != NULL) // si j ai un bout de phrase sauvegarde d'un precedent appel, je ne reread pas tout de suite
 	{
-		while (save[j] != '\0') // alors tant que je n'ai pas fini de tout lire dans save
+		while (save[0][j] != '\0') // alors tant que je n'ai pas fini de tout lire dans save
 		{
-			tmp[i] = save[j]; // je copie save dans tmp 
+			tmp[i] = save[0][j]; // je copie save dans tmp 
 			i++;
 			j++;
 		}
@@ -69,18 +66,11 @@ char	*readline(int fd, char *buf, char *save)
 			i++; 
 		}
 		tmp[i] = '\0'; // On signale la fin de la copie en mettant \0
-		save = savemore(i, buf); // ce que je lis en plus de ma ligne (apres le \n), je le place dans save avec la fonction savemore
+
+		*save = savemore(k, buf); // ce que je lis en plus de ma ligne (apres le \n), je le place dans save avec la fonction savemore
 	}
+
 	return (tmp); // je retourne la ligne lue
-}
-
-void	ft_putstr(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-		write(1, &(str[i++]), 1);
 }
 
 // fonction qui retourne -1,0 ou 1 si elle a lu une ligne ou non 
@@ -94,7 +84,7 @@ int		get_next_line(int fd, char **line)
 	
 	if (!line || fd < 0) //si on a un fd negatif (erreur) ou si read échoue,
 		return (-1); // alors return -1 pour signifier une erreur
-	tmp = readline(fd, buf, save); // on a donc la ligne qui a été lue, pas ce qui suit. Que la ligne.
+	tmp = readline(fd, buf, &save); // on a donc la ligne qui a été lue, pas ce qui suit. Que la ligne.
 	if (tmp == NULL) // si on a atteint la fin du fichier
 	// return le contenu de line 
 		return(0);
