@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
+/*   By: bemoreau <bemoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:13:44 by julmarti          #+#    #+#             */
-/*   Updated: 2021/05/31 16:37:27 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/05/31 17:02:21 by bemoreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <string.h>
 #include <stdio.h>
-#define BUFFER_SIZE 2// constante symbolique
+#define BUFFER_SIZE 20// constante symbolique
 
 // fonction qui sauvegarde ce qui a ete lu en trop 
 char 	*savemore(size_t i, char *buf)
@@ -49,8 +49,7 @@ char	*readline(int fd, char *buf, char *save)
 	i = 0;
 	j = 0;
 	k = 0;
-	tmp = malloc(sizeof(char) * BUFFER_SIZE + 1); // A PROTEGER 
-
+	tmp = malloc(sizeof(char) * (ft_strlen(save) + BUFFER_SIZE + 1)); // A PROTEGER
 	if (save != NULL) // si j ai un bout de phrase sauvegarde d'un precedent appel, je ne reread pas tout de suite
 	{
 		while (save[j] != '\0') // alors tant que je n'ai pas fini de tout lire dans save
@@ -60,11 +59,10 @@ char	*readline(int fd, char *buf, char *save)
 			j++;
 		}
 	}
-	retread = read(fd, buf, BUFFER_SIZE); 
-	printf("tmp = %s \n i = %zu \n retread = %zu \n", tmp, i, retread);
+	retread = read(fd, buf, BUFFER_SIZE);
 	if (retread) // si j arrive a EOF, retread = 0 mais on a quand meme lu qqch
 	{
-		while (buf[k] != '\n')// si on a lu quelque chose et qu'on rencontre pas la fin d'une ligne
+		while (buf[k] != '\n' && buf[k])// si on a lu quelque chose et qu'on rencontre pas la fin d'une ligne
 		{
 			tmp[i] = buf[k];//  je place ce que j'ai lu dans tmp
 			k++;
@@ -74,6 +72,15 @@ char	*readline(int fd, char *buf, char *save)
 		save = savemore(i, buf); // ce que je lis en plus de ma ligne (apres le \n), je le place dans save avec la fonction savemore
 	}
 	return (tmp); // je retourne la ligne lue
+}
+
+void	ft_putstr(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+		write(1, &(str[i++]), 1);
 }
 
 // fonction qui retourne -1,0 ou 1 si elle a lu une ligne ou non 
