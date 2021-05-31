@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
+/*   By: bemoreau <bemoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:46:03 by julmarti          #+#    #+#             */
-/*   Updated: 2021/05/03 10:09:06 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/05/31 17:01:42 by bemoreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,14 @@ int			main()
 	int		fd;
 	char	*line;
 	int		i;
+	int j = 0;
 
 	line = NULL;
 	fd = open("test.txt", O_RDONLY);
 	while ((i = get_next_line(fd, &line)) > 0)
 	{
+		if (j++ == 4)
+			exit(1);
 		ft_putendl((unsigned char *)line);
 		printf(" GNL = %s \n", line);
 		free(line);
