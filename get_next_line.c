@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
+/*   By: bemoreau <bemoreau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:13:44 by julmarti          #+#    #+#             */
-/*   Updated: 2021/05/31 21:15:22 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/06/01 16:36:30 by bemoreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ char	*readline(int fd, char *buf, char **save)
 	size_t		k;
 	size_t		retread; // je place le retour de read dans retread, buf contient ce qui a ete lu
 	char		*tmp;
+	char		*newsave;
 
 	i = 0;
 	j = 0;
@@ -49,11 +50,18 @@ char	*readline(int fd, char *buf, char **save)
 	tmp = malloc(sizeof(char) * (ft_strlen(*save) + BUFFER_SIZE + 1)); // A PROTEGER
 	if (*save != NULL) // si j ai un bout de phrase sauvegarde d'un precedent appel, je ne reread pas tout de suite
 	{
-		while (save[0][j] != '\0') // alors tant que je n'ai pas fini de tout lire dans save
+		while (save[0][j] != '\0' && save[0][j] != '\n') // alors tant que je n'ai pas fini de tout lire dans save
 		{
 			tmp[i] = save[0][j]; // je copie save dans tmp 
 			i++;
 			j++;
+		}
+		if (save[0][j] == '\n')
+		{
+			newsave = ft_substr(*save, ft_strlen(tmp) + 1, ft_strlen(*save) - i);
+			printf("newsave = %s \n", newsave);
+			free(*save);
+			*save = newsave;
 		}
 	}
 	retread = read(fd, buf, BUFFER_SIZE);
@@ -66,7 +74,6 @@ char	*readline(int fd, char *buf, char **save)
 			i++; 
 		}
 		tmp[i] = '\0'; // On signale la fin de la copie en mettant \0
-
 		*save = savemore(k, buf); // ce que je lis en plus de ma ligne (apres le \n), je le place dans save avec la fonction savemore
 	}
 
