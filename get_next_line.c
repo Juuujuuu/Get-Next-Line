@@ -16,99 +16,73 @@
 #define BUFFER_SIZE 10// constante symbolique
 
 // fonction qui sauvegarde ce qui a ete lu en trop 
-char 	*savemore(size_t i, char *buf)
+char 	*savemore(char *buf, char **save)
 {	
-	char *save;
-	size_t j;
+	char 	*join;
+	size_t	j;
+	char	*newsave;
 
-	save = malloc(sizeof(char) * BUFFER_SIZE + 1); //A PROTEGER
-	j = 0;
-	while (buf[i] != '\0') // tant que je ne suis pas arrivée a la fin de ce que j'ai lu
+	if (*save == NULL)
+		*save = ft_strdup(buf);
+	j = ft_strlen(ft_strchr(*save,'\n')); 
+	if (*save) 
 	{
-		save[j] = buf[i]; // je copie les éléments en rab dans ma static save, pour le prochain appel
+		if (ft_strchr(*save,'\n') != NULL) //  si on a une ligne
+		{
+			newsave = ft_substr(*save, ft_strlen(*save) - j + 1, j);
+			free(*save); 
+			*save = newsave; 
+		}
+		else if (ft_strchr(*save,'\n') == NULL) // si on a pas une ligne
+		{
+			join = ft_strjoin(*save, buf); 
+			free(*save);
+			*save = join; 
+		}
 		j++;
-		i++;
 	}
-	save[j] = '\0';
-	printf("save = %s \n", save);
-	return (save);
+	return (*save);
 }
 
 // fonction qui read et retourne la ligne (entièrement ou non). Renvoie a save ce qui n'est pas une ligne
 char	*readline(int fd, char *buf, char **save)
 {
 	size_t		i;
-	size_t		j;
-	size_t		k;
-	size_t		retread; // je place le retour de read dans retread, buf contient ce qui a ete lu
-	char		*tmp;
-	char		*newsave;
+	size_t		retread; 
 
 	i = 0;
-	j = 0;
-	k = 0;
-	tmp = malloc(sizeof(char) * (ft_strlen(*save) + BUFFER_SIZE + 1)); // A PROTEGER
-	if (*save != NULL) // si j ai un bout de phrase sauvegarde d'un precedent appel, je ne reread pas tout de suite
-	{
-		while (save[0][j] != '\0' && save[0][j] != '\n') // alors tant que je n'ai pas fini de tout lire dans save
-		{
-			tmp[i] = save[0][j]; // je copie save dans tmp 
-			i++;
-			j++;
-		}
-		if (save[0][j] == '\n')
-		{
-			newsave = ft_substr(*save, ft_strlen(tmp) + 1, ft_strlen(*save) - i);
-			printf("newsave = %s \n", newsave);
-			free(*save);
-			*save = newsave;
-		}
-	}
 	retread = read(fd, buf, BUFFER_SIZE);
-	if (retread) // si j arrive a EOF, retread = 0 mais on a quand meme lu qqch
-	{
-		while (buf[k] != '\n' && buf[k])// si on a lu quelque chose et qu'on rencontre pas la fin d'une ligne
-		{
-			tmp[i] = buf[k];//  je place ce que j'ai lu dans tmp
-			k++;
-			i++; 
-		}
-		tmp[i] = '\0'; // On signale la fin de la copie en mettant \0
-		*save = savemore(k, buf); // ce que je lis en plus de ma ligne (apres le \n), je le place dans save avec la fonction savemore
-	}
-
-	return (tmp); // je retourne la ligne lue
+	if (retread) 
+		*save = savemore(buf, save); 
+	return (buf); 
 }
 
 // fonction qui retourne -1,0 ou 1 si elle a lu une ligne ou non 
 int		get_next_line(int fd, char **line)
 {
 	int				i;
-	char			buf[BUFFER_SIZE + 1]; // contient ce qui est à lire/ a été lu, c'est le même buf que dans la fonction read
-	char			*tmp; // variable  dont la valeur est issue de la fonction readline
-	static char		*save = NULL; // variable static dont la valeur evoluera avec la fonction savemore
-	 
+	char			buf[BUFFER_SIZE + 1]; 
+	char			*tmp; 
+	static char		*save = NULL; 
 	
-	if (!line || fd < 0) //si on a un fd negatif (erreur) ou si read échoue,
-		return (-1); // alors return -1 pour signifier une erreur
-	tmp = readline(fd, buf, &save); // on a donc la ligne qui a été lue, pas ce qui suit. Que la ligne.
-	if (tmp == NULL) // si on a atteint la fin du fichier
-	// return le contenu de line 
+	if (!line || fd < 0) 
+		return (-1); 
+	tmp = readline(fd, buf, &save); 
+	if (tmp == NULL) 
 		return(0);
-	if (tmp != NULL) // si on a lu une ligne 
+	else 
 	{
 		i = 0;
-		line[0] = malloc(sizeof(char) * BUFFER_SIZE + 1); // je malloc l'espace pointé par *line
-		while (tmp[i] != '\0') // tant que je n'ai pas fini de lire la ligne
-		{
-			line[0][i] = tmp[i]; // je copie la ligne dans le tableau line, qui sera free lors du prochain appel 
-			i++; 
-		}
-		line[0][i] = '\0'; // je mets un /0 pour signaler la fin de la copie 
+		line[0] = malloc(sizeof(char) * BUFFER_SIZE + 1); 
+		if (ft_strchr(tmp, '\n') != NULL) // s'il y a un \n dans mon tmp
+			*line = strdup(tmp);
+		else if (ft_strchr(save,'\n') != NULL)
+			*line = strdup(save);
+			printf("line = %s \n", *line);
 	}
 	return (1);
 }
 // 	printf("buffer = %s \nfd = %d \nBuffer_size = %d \n", buf, fd, BUFFER_SIZE);
-//	printf("save = %s \n", *save);
 //	printf("tmp = %s\n i = %zu \n retread = %zu \n", tmp, i, retread);
-//	printf("save = %s \n", save);
+// 	printf("save = %s \n", *save);
+//	printf("buf = %s \n", buf);
