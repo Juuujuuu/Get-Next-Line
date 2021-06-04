@@ -39,12 +39,11 @@ char 	*savemore(char *buf, char **save)
 			free(*save);
 			*save = join; 
 		}
-		j++;
 	}
 	return (*save);
 }
 
-// fonction qui read et retourne la ligne (entièrement ou non). Renvoie a save ce qui n'est pas une ligne
+// fonction ?
 char	*readline(int fd, char *buf, char **save)
 {
 	size_t		i;
@@ -54,32 +53,36 @@ char	*readline(int fd, char *buf, char **save)
 	retread = read(fd, buf, BUFFER_SIZE);
 	if (retread) 
 		*save = savemore(buf, save); 
-	return (buf); 
+	return (*save); 
 }
 
 // fonction qui retourne -1,0 ou 1 si elle a lu une ligne ou non 
 int		get_next_line(int fd, char **line)
 {
-	int				i;
 	char			buf[BUFFER_SIZE + 1]; 
 	char			*tmp; 
 	static char		*save = NULL; 
+	int				i;
 	
 	if (!line || fd < 0) 
 		return (-1); 
-	tmp = readline(fd, buf, &save); 
+	tmp = readline(fd, buf, &save); // tmp contient ce qui a ete lu
 	if (tmp == NULL) 
 		return(0);
 	else 
 	{
-		i = 0;
 		line[0] = malloc(sizeof(char) * BUFFER_SIZE + 1); 
-		if (ft_strchr(tmp, '\n') != NULL) // s'il y a un \n dans mon tmp
-			*line = strdup(tmp);
-		else if (ft_strchr(save,'\n') != NULL)
-			*line = strdup(save);
-			printf("line = %s \n", *line);
-	}
+		printf("tmp = %s\n", tmp);
+		i = 0;
+		if (ft_strchr(save,'\n') != NULL) // sinon, je regarde si j'ai une ligne dans ma save. Si oui, je copie save dans line
+			{
+				while (save[i] != '\n')
+				{
+					line[0][i] = save[i];
+					i++;
+				}
+			}
+	}	
 	return (1);
 }
 // 	printf("buffer = %s \nfd = %d \nBuffer_size = %d \n", buf, fd, BUFFER_SIZE);
