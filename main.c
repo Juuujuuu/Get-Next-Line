@@ -37,14 +37,13 @@ int			main()
 	{
 		if (j++ == 4)
 			exit(1);
-		ft_putendl((unsigned char *)line);
-		printf(" GNL = %s \n", line);
+		printf("GNL = %s\n", line);
 		free(line);
 		printf("%d\n", i);
 	}
 	if (line != NULL)
 	ft_putendl((unsigned char *)line);
-	printf(" GNL = %s \n", line);
+	printf(" GNL = %s\n", line);
 	printf("%d\n", i);
 	free(line);
 	close(fd);

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include <stdlib.h>
 #include "get_next_line.h"
 
@@ -130,6 +131,21 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	str[i + j] = '\0';
 	return (str);
+}
+
+void    *ft_memset(void *b, int c, size_t len)
+{
+        size_t                  i;
+        unsigned char   *str;
+
+        i = 0;
+        str = (unsigned char *)b;
+        while (i < len)
+        {
+                str[i] = (unsigned char)c;
+                i++;
+        }
+        return (b);
 }
 
 t_list	*ft_lstnew(void *content)
