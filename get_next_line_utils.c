@@ -57,6 +57,8 @@ char	*ft_strchr(const char *s, int c)
 
 	curseur = 0;
 	str = (char *)s;
+	if (!s)
+		return (NULL);
 	while (s[curseur])
 	{
 		if (s[curseur] == c)
@@ -65,7 +67,7 @@ char	*ft_strchr(const char *s, int c)
 	}
 	if (c == '\0')
 		return (&str[curseur]);
-	return (0);
+	return (NULL);
 }
 
 char	*ft_strdup(const char *s)
@@ -162,3 +164,4 @@ t_list	*ft_lstnew(void *content)
 	}
 	return (element);
 }
+
