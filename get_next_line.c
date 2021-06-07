@@ -15,15 +15,18 @@
 #include <stdio.h>
 #define BUFFER_SIZE 10// constante symbolique
 
-char 	*savemore(char *buf, char **save)
+void	readline(int fd, char *buf, char **save);
+
+char 	*savemore(int fd, char *buf, char **save)
 {
 	char 	*join;
 	size_t	j;
 	char	*newsave;
-
+	
 	if (*save == NULL)
 		*save = ft_strdup(buf);
 	j = ft_strlen(ft_strchr(*save,'\n'));
+	printf("valeur de j = %zu\n", j);
 	if (*save)
 	{
 		if (ft_strchr(*save,'\n') != NULL) //  si on a une ligne
@@ -31,6 +34,12 @@ char 	*savemore(char *buf, char **save)
 			newsave = ft_substr(*save, ft_strlen(*save) - j + 1, j);
 			free(*save);
 			*save = newsave;
+			printf("save = %s \n", *save);
+			if (*save == NULL)
+			{
+				readline(fd, buf, save);
+				printf("toto \n");
+			}	
 		}
 		else if (ft_strchr(*save,'\n') == NULL) // si on a pas une ligne
 		{
@@ -49,12 +58,11 @@ void	readline(int fd, char *buf, char **save)
 
 	i = 0;
 	retread = 0;
-	printf("saved; %s\n", *save);
-	if (!*save || (*save && ft_strchr(*save,'\n') == NULL)) // si je n'ai pas de ligne dans mon save, alors je read
+	if (!*save || (*save && ft_strchr(*save,'\n') == NULL)) // si mon save est null ou si je n'ai pas de ligne dans mon save, alors je read
 	{
 		retread = read(fd, buf, BUFFER_SIZE);
 	}
-	*save = savemore(buf, save);
+	*save = savemore(fd, buf, save);
 }
 
 int		get_next_line(int fd, char **line)
@@ -63,15 +71,12 @@ int		get_next_line(int fd, char **line)
 	static char		*save = NULL;
 	int				i;
 	
-	printf("JE RENTRE\n");
 	if (!line || fd < 0)
 		return (-1);
 	readline(fd, buf, &save);
 	*line = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	*line = ft_memset(*line, 0, BUFFER_SIZE + 1);// remplacer par bzero
 	i = 0;
-	
-//	printf("save: %s | buf: %s\n", save, buf);
 	if (ft_strchr(save,'\n') != NULL) // sinon, je regarde si j'ai une ligne dans ma save. Si oui, je copie save dans line
 	{
 		while (save[i] != '\n')
@@ -92,3 +97,4 @@ int		get_next_line(int fd, char **line)
 }
 // 	printf("save = %s \n", *save);
 //	printf("buf = %s \n", buf);
+//	printf("save: %s | buf: %s\n", save, buf);
