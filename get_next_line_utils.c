@@ -3,16 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bemoreau <bemoreau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:16:24 by julmarti          #+#    #+#             */
-/*   Updated: 2021/06/01 16:18:46 by bemoreau         ###   ########.fr       */
+/*   Updated: 2021/06/01 16:18:46 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include <stdlib.h>
 #include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	size_t i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
+}
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -36,18 +48,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	newstr[j] = '\0';
 	return (newstr);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -88,26 +88,6 @@ char	*ft_strdup(const char *s)
 	return (s2);
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
-{
-	unsigned char	*dest;
-	unsigned char	*sour;
-	size_t			i;
-
-	i = 0;
-	if (!dst && !src)
-		return(NULL);
-	dest = (unsigned char *)dst;
-	sour = (unsigned char *)src;
-	while (n > 0)
-	{
-		dest[i] = sour[i];
-		i++;
-		n--;
-	}
-	return(dest);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
@@ -135,33 +115,18 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-void    *ft_memset(void *b, int c, size_t len)
+void    ft_bzero(void *s, size_t n)
 {
-        size_t                  i;
+        size_t          i;
         unsigned char   *str;
 
         i = 0;
-        str = (unsigned char *)b;
-        while (i < len)
+        str = (unsigned char *)s;
+        if (n == 0)
+                return ;
+        while (i < n)
         {
-                str[i] = (unsigned char)c;
+                str[i] = '\0';
                 i++;
         }
-        return (b);
 }
-
-t_list	*ft_lstnew(void *content)
-{
-	t_list *element;
-
-	element = malloc(sizeof(t_list));
-	if (!element)
-		return(NULL);
-	if (element)
-	{
-		element->content = content;
-		element->next = NULL;
-	}
-	return (element);
-}
-

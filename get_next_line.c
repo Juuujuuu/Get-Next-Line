@@ -20,64 +20,46 @@ void	readline(int fd, char *buf, char **save);
 char 	*savemore(char *buf, char **save)
 {
 	char 	*join;
-	size_t	j;
+	size_t	start;
 	char	*newsave;
 
-	printf("\t## SaveMore ##\n\n");
-	
+	printf("\t## SAVEMORE ##\n");
 	if (*save == NULL) 
-	{
-		printf("\t- Save : strdup\n");
 		*save = ft_strdup(buf);
-	//	return (*save);
-	}
-	j = ft_strlen(ft_strchr(*save,'\n'));
-	
-	printf("\t- J = [%lu]\n", j);
-	printf("\t- *Save = [%s]\n", *save);
-
-	//if (*save)
-	//{
-		printf("\t ## NOT LINE ##\n\n");
-		printf("\t- STRJOIN : *save [%s] && [%s]\n", *save, buf);
-		join = ft_strjoin(*save, buf);
-		free(*save);
-		*save = join;
-		printf("\t- Save : [%s]\n", *save);
+	start = ft_strlen(ft_strchr(*save,'\n'));
+	if (*save)
+	{
 		if (ft_strchr(*save,'\n') != NULL) //  si on a une ligne
 		{
-			printf("\t ## LINE ##\n\n");
-			newsave = ft_substr(*save, ft_strlen(*save) - j + 1, j);
-			printf("\t- Substr result [%lu] [%zu]\n", ft_strlen(*save) - j +1, j);
+			newsave = ft_substr(*save, ft_strlen(*save) - start + 1, ft_strlen(*save)); // je recupere ma ligne 
 			free(*save);
-			*save = newsave;
-			printf("\t- Save : [%s]\n", *save);
+			*save = newsave; // je place la ligne dans save
+			printf("\tSAVE SUBSTR = %s\n",*save);
+			
 		}
-	
-	//}
-	//else
-	//	printf("\t- Save is NULL (le chat est pas content !)\n");
-
-	printf("\n\t- Final Save : [%s]\n\n", *save);
-
+		else if (ft_strchr(*save,'\n') == NULL) // si on a pas une ligne complete 
+		{
+			join = ft_strjoin(*save, buf);
+			free(*save);
+			*save = join;
+			printf("\tSAVE STRJOIN = %s\n",*save);
+		}
+	}
 	return (*save);
 }
 
+// fonction pour faire le substr dans save ? 
+
 void	readline(int fd, char *buf, char **save)
 {
-	size_t		i;
-	int			retread;
+	int		retread;
 
-	i = 0;
+	printf("\t## READLINE ##\n");
 	retread = 0;
-
-	printf("\t## ReadLine ##\n\n");
-
-	//if (!*save || (*save && ft_strchr(*save,'\n') == NULL)) // si mon save est null ou si je n'ai pas de ligne dans mon save, alors je read
-	retread = read(fd, buf, BUFFER_SIZE);
-
-	printf("\t- ReadLine | Buffer : [%s]\n\n\n", buf);
-
+	if (!*save || (*save && ft_strchr(*save,'\n') == NULL)) // si mon save est null ou si je n'ai pas de ligne dans mon save, alors je read
+		retread = read(fd, buf, BUFFER_SIZE);
+	if (retread == 0 && !*save)
+		printf("coucou petite perruche");
 	*save = savemore(buf, save);
 }
 
@@ -87,37 +69,30 @@ int		get_next_line(int fd, char **line)
 	static char		*save = NULL;
 	int				i;
 	
-	printf("\n\n\n### GET NEXT LINE ###\n\n\n");
-
+	printf("\n\n### GET NEXT LINE ###\n\n");
 	if (!line || fd < 0)
 		return (-1);
 	readline(fd, buf, &save);
-
-	printf("\t## MALLOC ##\n\n");
-
 	*line = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	*line = ft_memset(*line, 0, BUFFER_SIZE + 1);// remplacer par bzero
+	ft_bzero(*line, BUFFER_SIZE + 1);
 	i = 0;
-	if (ft_strchr(save,'\n') != NULL) // sinon, je regarde si j'ai une ligne dans ma save. Si oui, je copie save dans line
+	if (ft_strchr(save,'\n') != NULL) //  si j'ai une ligne dans ma save. Si oui, je copie save dans line
 	{
-		printf("\t## COPY Save -> Line ##\n\n");
 		while (save[i] != '\n')
 		{
 			line[0][i] = save[i];
 			i++;
 		}
 	}
-	else if (ft_strchr(buf,'\n') != NULL)
+	else if (ft_strchr(buf,'\n') != NULL) // sinon, je copie buf dans ma save
 	{
-		printf("\t## COPY Buf -> Line ##\n\n");
 		while (buf[i] != '\n')
 		{
 			line[0][i] = buf[i];
 			i++;
 		}
 	}
-	printf("\t- Return 1\n");
-	return (1);
+	return (1); 
 }
 // 	printf("save = %s \n", *save);
 //	printf("buf = %s \n", buf);

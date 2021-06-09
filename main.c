@@ -29,21 +29,22 @@ int			main()
 	int		fd;
 	char	*line;
 	int		i;
-	int j = 0;
+	int 	j;
 
+	j = 0;
 	line = NULL;
 	fd = open("test.txt", O_RDONLY);
 	while ((i = get_next_line(fd, &line)) > 0)
 	{
-		if (j++ == 4)
+		if (j++ == 8)
 			exit(1);
-		printf("GNL = %s\n", line);
+		printf("\tGNL = %s\n", line);
 		free(line);
-		printf("%d\n", i);
+		printf("\tRetour GNL = %d\n", i);
 	}
 	if (line != NULL)
 	ft_putendl((unsigned char *)line);
-	printf(" GNL = %s\n", line);
+	printf("\tGNL = %s\n", line);
 	printf("%d\n", i);
 	free(line);
 	close(fd);
