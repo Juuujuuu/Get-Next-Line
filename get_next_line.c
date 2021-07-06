@@ -17,38 +17,34 @@
 
 void	readline(int fd, char *buf, char **save);
 
-char 	*savemore(char *buf, char **save)
+char	*savemore(char **save, char **line)
 {
-	char 	*join;
-	size_t	start;
 	char	*newsave;
 
-	printf("\t## SAVEMORE ##\n");
-	if (*save == NULL) 
-		*save = ft_strdup(buf);
-	start = ft_strlen(ft_strchr(*save,'\n'));
-	if (*save)
+	if (ft_strchr(*save, '\n') != NULL)
 	{
-		if (ft_strchr(*save,'\n') != NULL) //  si on a une ligne
-		{
-			newsave = ft_substr(*save, ft_strlen(*save) - start + 1, ft_strlen(*save)); // je recupere ma ligne 
-			free(*save);
-			*save = newsave; // je place la ligne dans save
-			printf("\tSAVE SUBSTR = %s\n",*save);
-			
-		}
-		else if (ft_strchr(*save,'\n') == NULL) // si on a pas une ligne complete 
+		newsave = ft_substr(*save, ft_strlen(*line), ft_strlen(*save)); // je recupere ce qu'il reste et je le place dans newsave
+		free(*save);
+		*save = newsave; 
+		printf("\tSAVE SUBSTR = %s\n", *save);
+	}
+	return (*save);
+}
+
+char 	*saveless(char *buf, char **save)
+{
+	char 	*join;
+
+	printf("\t## saveless ##\n");
+	if (ft_strchr(*save,'\n') == NULL) // si on a pas une ligne complete 
 		{
 			join = ft_strjoin(*save, buf);
 			free(*save);
 			*save = join;
 			printf("\tSAVE STRJOIN = %s\n",*save);
 		}
-	}
 	return (*save);
 }
-
-// fonction pour faire le substr dans save ? 
 
 void	readline(int fd, char *buf, char **save)
 {
@@ -58,39 +54,29 @@ void	readline(int fd, char *buf, char **save)
 	retread = 0;
 	if (!*save || (*save && ft_strchr(*save,'\n') == NULL)) // si mon save est null ou si je n'ai pas de ligne dans mon save, alors je read
 		retread = read(fd, buf, BUFFER_SIZE);
-	if (retread == 0 && !*save)
-		printf("coucou petite perruche");
-	*save = savemore(buf, save);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	char			buf[BUFFER_SIZE + 1];
 	static char		*save = NULL;
-	int				i;
 	
 	printf("\n\n### GET NEXT LINE ###\n\n");
 	if (!line || fd < 0)
 		return (-1);
 	readline(fd, buf, &save);
+	if (!*buf && !save)// si je n'ai rien lu et rien dans save, j'ai atteint EOF
+		return(0);
 	*line = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	ft_bzero(*line, BUFFER_SIZE + 1);
-	i = 0;
-	if (ft_strchr(save,'\n') != NULL) //  si j'ai une ligne dans ma save. Si oui, je copie save dans line
+	if (!save) // si ma save est vide  
+		save = ft_strdup(buf); // je copie ce que j'ai lu directement dans save pour le retravailler ensuite 
+	if (ft_strchr(save,'\n') == NULL) //  si on a pasune ligne dans save
+		save = saveless(buf, &save); // je joins avec ce que j'ai precedemment 
+	else
 	{
-		while (save[i] != '\n')
-		{
-			line[0][i] = save[i];
-			i++;
-		}
-	}
-	else if (ft_strchr(buf,'\n') != NULL) // sinon, je copie buf dans ma save
-	{
-		while (buf[i] != '\n')
-		{
-			line[0][i] = buf[i];
-			i++;
-		}
+		*line = ft_substr(save, 0, ft_findline(save) + 1); // je copie la ligne dans line
+		save = savemore(&save, line);
 	}
 	return (1); 
 }
