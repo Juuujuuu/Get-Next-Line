@@ -28,24 +28,21 @@ int			main()
 {
 	int		fd;
 	char	*line;
-	int		i;
 	int 	j;
 
 	j = 0;
 	line = NULL;
 	fd = open("test.txt", O_RDONLY);
-	while ((i = get_next_line(fd, &line)) > 0)
+	while ((line = get_next_line(fd)))
 	{
-		if (j++ == 8)
+		if (j++ == 10)
 			exit(1);
 		printf("\tGNL = %s\n", line);
 		free(line);
-		printf("\tRetour GNL = %d\n", i);
 	}
 	if (line != NULL)
 	ft_putendl((unsigned char *)line);
 	printf("\tGNL = %s\n", line);
-	printf("%d\n", i);
 	free(line);
 	close(fd);
 	system("leaks a.out");

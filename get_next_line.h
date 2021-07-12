@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-int		get_next_line(int fd, char **line);
+char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
 size_t  ft_findline(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);

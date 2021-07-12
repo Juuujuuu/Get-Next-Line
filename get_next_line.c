@@ -15,12 +15,11 @@
 #include <stdio.h>
 #define BUFFER_SIZE 10// constante symbolique
 
-void	readline(int fd, char *buf, char **save);
-
-char	*savemore(char **save, char **line)
+char	*savemore(char **save, char **line) // fonction qui cree une nouvelle string pour garder ce que j'ai pas encore return 
 {
 	char	*newsave;
 
+	printf("\t## SAVEMORE ##\n");
 	if (ft_strchr(*save, '\n') != NULL)
 	{
 		newsave = ft_substr(*save, ft_strlen(*line), ft_strlen(*save)); // je recupere ce qu'il reste et je le place dans newsave
@@ -31,18 +30,18 @@ char	*savemore(char **save, char **line)
 	return (*save);
 }
 
-char 	*saveless(char *buf, char **save)
+char 	*saveless(char *buf, char **save) // fonction qui permet de join avec ce que j'ai obtenu precedemment 
 {
 	char 	*join;
 
-	printf("\t## saveless ##\n");
-	if (ft_strchr(*save,'\n') == NULL) // si on a pas une ligne complete 
-		{
-			join = ft_strjoin(*save, buf);
-			free(*save);
-			*save = join;
-			printf("\tSAVE STRJOIN = %s\n",*save);
-		}
+	printf("\t## SAVELESS ##\n");
+	if (!*save || ft_strchr(*save,'\n') == NULL) // si on a pas une ligne complete 
+	{
+		join = ft_strjoin(*save, buf);
+		free(*save);
+		*save = join;
+		printf("\tSAVE STRJOIN = %s\n",*save);
+	}
 	return (*save);
 }
 
@@ -51,35 +50,43 @@ void	readline(int fd, char *buf, char **save)
 	int		retread;
 
 	printf("\t## READLINE ##\n");
-	retread = 0;
-	if (!*save || (*save && ft_strchr(*save,'\n') == NULL)) // si mon save est null ou si je n'ai pas de ligne dans mon save, alors je read
-		retread = read(fd, buf, BUFFER_SIZE);
+	retread = BUFFER_SIZE;
+	printf ("save = %s \n", *save);
+	
+	if (!*save || (ft_strchr(*save,'\n') == NULL)) // si ma save est null ou si je n'ai pas de ligne dans save, alors je read
+	{
+		while (ft_strchr(buf,'\n') == NULL && (retread == BUFFER_SIZE))
+		{
+			retread = read(fd, buf, BUFFER_SIZE);
+			printf("RETREAD: %d\nBUF: %s\n", retread, buf);
+			buf[retread] = '\0';
+			*save = saveless(buf, save);
+		}
+		if (retread != BUFFER_SIZE)
+			*save = saveless("\n", save);
+	}
 }
 
-int		get_next_line(int fd, char **line)
+char	*get_next_line(int fd)
 {
-	char			buf[BUFFER_SIZE + 1];
 	static char		*save = NULL;
-	
+	char			*line;
+	char			buf[BUFFER_SIZE + 1];
+
 	printf("\n\n### GET NEXT LINE ###\n\n");
-	if (!line || fd < 0)
-		return (-1);
+	line = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if ( !line || fd < 0)
+		return (NULL);
+	ft_bzero(line, BUFFER_SIZE + 1);
 	readline(fd, buf, &save);
-	if (!*buf && !save)// si je n'ai rien lu et rien dans save, j'ai atteint EOF
-		return(0);
-	*line = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	ft_bzero(*line, BUFFER_SIZE + 1);
-	if (!save) // si ma save est vide  
-		save = ft_strdup(buf); // je copie ce que j'ai lu directement dans save pour le retravailler ensuite 
-	if (ft_strchr(save,'\n') == NULL) //  si on a pasune ligne dans save
-		save = saveless(buf, &save); // je joins avec ce que j'ai precedemment 
-	else
+	if (!save)
+		save = ft_strdup(buf);
+	if (ft_strchr(save,'\n') == NULL) //  si !ligne, join
+		save = saveless(buf, &save); 
+	if (ft_strchr (save,'\n') != NULL)// si ligne, substr 
 	{
-		*line = ft_substr(save, 0, ft_findline(save) + 1); // je copie la ligne dans line
-		save = savemore(&save, line);
+		line = ft_substr(save, 0, ft_findline(save) + 1);
+		save = savemore(&save, &line);
 	}
-	return (1); 
+	return (line); 
 }
-// 	printf("save = %s \n", *save);
-//	printf("buf = %s \n", buf);
-//	printf("save: %s | buf: %s\n", save, buf);
