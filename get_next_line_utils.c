@@ -10,13 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include <stdlib.h>
 #include "get_next_line.h"
 
 size_t	ft_strlen(const char *s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	if (!s)
@@ -28,10 +27,11 @@ size_t	ft_strlen(const char *s)
 
 size_t	ft_findline(const char *s)
 {
-	size_t i;
+	size_t	i;
+
 	i = 0;
 	if (!s)
-		return(0);
+		return (0);
 	while (s[i] != '\n')
 		i++;
 	return (i);
@@ -63,8 +63,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 char	*ft_strchr(const char *s, int c)
 {
-	int	curseur;
-	char *str;
+	int		curseur;
+	char	*str;
 
 	curseur = 0;
 	str = (char *)s;
@@ -81,64 +81,26 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(const char *s)
-{
-	int		i;
-	char	*s2;
-
-	i = 0;
-	s2 = malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (s2 == NULL)
-		return (NULL);
-	while (s[i])
-	{
-		s2[i] = s[i];
-		i++;
-	}
-	s2[i] = '\0';
-	return (s2);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
 	int		j;
 	char	*str;
 
-	i = 0;
-	j = 0;
+	i = -1;
+	j = -1;
 	if (!s2)
 		return (NULL);
 	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (str == NULL)
 		return (NULL);
 	if (s1)
-		while (s1[i])
-		{
-			str[i] = s1[i];
-			i++;
-		}
-	while (s2[j])
 	{
-		str[i + j] = s2[j];
-		j++;
+		while (s1[++i])
+			str[i] = s1[i];
 	}
+	while (s2[++j])
+		str[i + j] = s2[j];
 	str[i + j] = '\0';
 	return (str);
-}
-
-void    ft_bzero(void *s, size_t n)
-{
-        size_t          i;
-        unsigned char   *str;
-
-        i = 0;
-        str = (unsigned char *)s;
-        if (n == 0)
-                return ;
-        while (i < n)
-        {
-                str[i] = '\0';
-                i++;
-        }
 }
