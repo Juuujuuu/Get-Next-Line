@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:13:44 by julmarti          #+#    #+#             */
-/*   Updated: 2021/06/01 16:36:30 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/07/17 17:13:48 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <string.h>
 #include <stdio.h>
+//# define BUFFER_SIZE 10000
 
 char	*savemore(char **save, char **line) // fonction qui cree une nouvelle string pour garder ce que j'ai pas encore return 
 {
@@ -21,7 +22,7 @@ char	*savemore(char **save, char **line) // fonction qui cree une nouvelle strin
 	if (ft_strchr(*save, '\n') != NULL)
 	{
 		newsave = ft_substr(*save, ft_strlen(*line), ft_strlen(*save)); // je recupere ce qu'il reste et je le place dans newsave
-		free(*save);
+	//	free(*save);
 		*save = newsave;
 	}
 	return (*save);

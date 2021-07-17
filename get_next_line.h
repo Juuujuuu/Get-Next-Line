@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:16:39 by julmarti          #+#    #+#             */
-/*   Updated: 2021/06/01 16:32:22 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/07/16 19:08:11 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ size_t	ft_strlen(const char *s);
 size_t	ft_findline(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);
-char	*ft_strdup(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);
-void	ft_bzero(void *s, size_t n);
 
 #endif
