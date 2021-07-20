@@ -17,12 +17,13 @@
 
 char	*savemore(char **save, char **line) // fonction qui cree une nouvelle string pour garder ce que j'ai pas encore return 
 {
+	printf("COUCOU JE SUIS DANS SAVEMORE\n");
 	char	*newsave;
 
 	if (ft_strchr(*save, '\n') != NULL)
 	{
 		newsave = ft_substr(*save, ft_strlen(*line), ft_strlen(*save)); // je recupere ce qu'il reste et je le place dans newsave
-	//	free(*save);
+		free(*save);
 		*save = newsave;
 	}
 	return (*save);
@@ -30,6 +31,7 @@ char	*savemore(char **save, char **line) // fonction qui cree une nouvelle strin
 
 char	*saveless(char *buf, char **save) // fonction qui permet de join avec ce que j'ai obtenu precedemment 
 {
+	printf("COUCOU JE SUIS DANS SAVELESS\n");
 	char	*join;
 
 	if (!*save || ft_strchr(*save, '\n') == NULL) // si on a pas une ligne complete 
@@ -77,6 +79,10 @@ char	*get_next_line(int fd)
 		if (retread != BUFFER_SIZE) //si je suis a l'EOF 
 			save = saveless("\n", &save); // je rajoute un \n artificiel a save
 	}
+	printf("address de save avant save manage: %p\n", save);
+	printf("address de buf avant save manage: %p\n", buf);
 	savemanage(buf, &save, &line);
+	printf("address de save apres save manage: %p\n", save);
+	printf("address de buf apres save manage: %p\n", buf);
 	return (line);
 }
