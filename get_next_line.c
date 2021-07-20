@@ -52,6 +52,7 @@ void	savemanage(char *buf, char **save, char **line)
 		*line = ft_substr(*save, 0, ft_findline(*save) + 1);
 		*save = savemore(save, line);
 	}
+	//exit(0);
 }
 
 char	*get_next_line(int fd)
@@ -80,10 +81,10 @@ char	*get_next_line(int fd)
 		if (retread != BUFFER_SIZE) //si je suis a l'EOF 
 			save = saveless("\n", &save); // je rajoute un \n artificiel a save
 	}
-	//printf("address de save avant save manage: %p\n", save);
-	//printf("address de buf avant save manage: %p\n", buf);
+	printf("address de save avant save manage: %p\n", save);
+	printf("address de buf avant save manage: %p\n", buf);
 	savemanage(buf, &save, &line);
-	//printf("address de save apres save manage: %p\n", save);
-	//printf("address de buf apres save manage: %p\n", buf);
+	printf("address de save apres save manage: %p\n", save);
+	printf("address de buf apres save manage: %p\n", buf);
 	return (line);
 }
