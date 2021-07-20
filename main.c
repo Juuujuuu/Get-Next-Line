@@ -33,14 +33,14 @@ int			main()
 	fd = open("test.txt", O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
-		printf("\tGNL = %s\n", line);
+		// printf("\tGNL = %s\n", line);
 		free(line);
 	}
 	if (line != NULL)
-	ft_putendl((unsigned char *)line);
-	printf("\tGNL = %s\n", line);
+		ft_putendl((unsigned char *)line);
+	// printf("\tGNL = %s\n", line);
 	free(line);
 	close(fd);
-	system("leaks a.out");
+	// system("leaks a.out");
 	return (0);
 }

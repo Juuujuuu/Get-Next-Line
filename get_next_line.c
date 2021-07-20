@@ -17,7 +17,7 @@
 
 char	*savemore(char **save, char **line) // fonction qui cree une nouvelle string pour garder ce que j'ai pas encore return 
 {
-	printf("COUCOU JE SUIS DANS SAVEMORE\n");
+	//printf("COUCOU JE SUIS DANS SAVEMORE\n");
 	char	*newsave;
 
 	if (ft_strchr(*save, '\n') != NULL)
@@ -31,10 +31,10 @@ char	*savemore(char **save, char **line) // fonction qui cree une nouvelle strin
 
 char	*saveless(char *buf, char **save) // fonction qui permet de join avec ce que j'ai obtenu precedemment 
 {
-	printf("COUCOU JE SUIS DANS SAVELESS\n");
+	//printf("COUCOU JE SUIS DANS SAVELESS\n");
 	char	*join;
 
-	if (!*save || ft_strchr(*save, '\n') == NULL) // si on a pas une ligne complete 
+	if ((!*save || ft_strchr(*save, '\n') == NULL) && buf) // si on a pas une ligne complete 
 	{
 		join = ft_strjoin(*save, buf);
 		free(*save);
@@ -59,7 +59,7 @@ char	*get_next_line(int fd)
 	static char		*save = NULL;
 	char			*line;
 	char			buf[BUFFER_SIZE + 1];
-	int				retread;
+	ssize_t			retread;
 
 	retread = 0;
 	if (read(fd, NULL, 0) == -1)
@@ -67,6 +67,7 @@ char	*get_next_line(int fd)
 	if (!save || (ft_strchr(save, '\n') == NULL)) // si ma save est null ou si je n'ai pas de ligne dans save, alors je read
 	{
 		retread = read(fd, buf, BUFFER_SIZE);
+		buf[retread] = '\0';
 		if (!retread) // si j'ai deja lu la fin du fichier
 			return (NULL);
 		save = saveless(buf, &save); // je fais un strjoin dans save de ce que j ai lu
@@ -79,10 +80,10 @@ char	*get_next_line(int fd)
 		if (retread != BUFFER_SIZE) //si je suis a l'EOF 
 			save = saveless("\n", &save); // je rajoute un \n artificiel a save
 	}
-	printf("address de save avant save manage: %p\n", save);
-	printf("address de buf avant save manage: %p\n", buf);
+	//printf("address de save avant save manage: %p\n", save);
+	//printf("address de buf avant save manage: %p\n", buf);
 	savemanage(buf, &save, &line);
-	printf("address de save apres save manage: %p\n", save);
-	printf("address de buf apres save manage: %p\n", buf);
+	//printf("address de save apres save manage: %p\n", save);
+	//printf("address de buf apres save manage: %p\n", buf);
 	return (line);
 }
