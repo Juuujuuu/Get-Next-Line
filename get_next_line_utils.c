@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include "get_next_line.h"
+#include <stdio.h>
 
 size_t	ft_strlen(const char *s)
 {
@@ -32,7 +33,7 @@ size_t	ft_findline(const char *s)
 	i = 0;
 	if (!s)
 		return (0);
-	while (s[i] != '\n')
+	while (s[i] && s[i] != '\n')
 		i++;
 	return (i);
 }
@@ -91,20 +92,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	j = 0;
 	if (!s2)
 		return (NULL);
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	str = malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2) + 1)));
 	if (str == NULL)
 		return (NULL);
 	if (s1)
 	{
 		while (s1[i])
     	{
-			str[i] = s1[i];
+		  str[i] = s1[i];
+		  str[i+1] = 0;
       	  i++;
     	}
 	}
     while (s2[j])
     {
-    	 str[i + j] = s2[j];
+    	str[i + j] = s2[j];
+		str[j+i+1] = 0;
         j++;
     }
 	str[i + j] = '\0';

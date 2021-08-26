@@ -20,6 +20,7 @@ char	*savemore(char **save, char **line) // fonction qui cree une nouvelle strin
 	//printf("COUCOU JE SUIS DANS SAVEMORE\n");
 	char	*newsave;
 
+	newsave = NULL;
 	if (ft_strchr(*save, '\n') != NULL)
 	{
 		newsave = ft_substr(*save, ft_strlen(*line), ft_strlen(*save)); // je recupere ce qu'il reste et je le place dans newsave
@@ -68,7 +69,7 @@ char	*get_next_line(int fd)
 	if (!save || (ft_strchr(save, '\n') == NULL)) // si ma save est null ou si je n'ai pas de ligne dans save, alors je read
 	{
 		retread = read(fd, buf, BUFFER_SIZE);
-		buf[retread] = '\0';
+		buf[retread] = '\0';//je marque la fin de la lecture 
 		if (!retread) // si j'ai deja lu la fin du fichier
 			return (NULL);
 		save = saveless(buf, &save); // je fais un strjoin dans save de ce que j ai lu
@@ -81,10 +82,6 @@ char	*get_next_line(int fd)
 		if (retread != BUFFER_SIZE) //si je suis a l'EOF 
 			save = saveless("\n", &save); // je rajoute un \n artificiel a save
 	}
-	printf("address de save avant save manage: %p\n", save);
-	printf("address de buf avant save manage: %p\n", buf);
 	savemanage(buf, &save, &line);
-	printf("address de save apres save manage: %p\n", save);
-	printf("address de buf apres save manage: %p\n", buf);
 	return (line);
 }
