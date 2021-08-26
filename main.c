@@ -41,6 +41,6 @@ int			main()
 	printf("\tGNL = %s\n", line);
 	free(line);
 	close(fd);
-	system("leaks a.out");
+//	system("leaks a.out");
 	return (0);
 }

@@ -53,7 +53,6 @@ void	savemanage(char *buf, char **save, char **line)
 		*line = ft_substr(*save, 0, ft_findline(*save) + 1);
 		*save = savemore(save, line);
 	}
-	//exit(0);
 }
 
 char	*get_next_line(int fd)
@@ -71,7 +70,10 @@ char	*get_next_line(int fd)
 		retread = read(fd, buf, BUFFER_SIZE);
 		buf[retread] = '\0';//je marque la fin de la lecture 
 		if (!retread) // si j'ai deja lu la fin du fichier
+		{
+			free(save);
 			return (NULL);
+		}
 		save = saveless(buf, &save); // je fais un strjoin dans save de ce que j ai lu
 		while (ft_strchr(buf, '\n') == NULL && retread == BUFFER_SIZE) // tant que j'ai pas une ligne complete dans buf et que je suis pas a EOF 
 		{

@@ -44,6 +44,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t		j;
 	char		*newstr;
 
+//	printf("len = %zu\n", len);
+//	printf("s = %s\n", s);
 	newstr = (char *)malloc(sizeof(char) * (len + 1));
 	if (!newstr)
 		return (NULL);
