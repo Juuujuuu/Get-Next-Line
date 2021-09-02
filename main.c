@@ -24,21 +24,22 @@ void ft_putendl(unsigned char *str)
 	write(1, "\n", 1);
 }
 
-int			main()
+int			main(int argc, char **argv)
 {
 	int		fd;
 	char	*line;
 
+	(void)argc;
 	line = NULL;
-	fd = open("test.txt", O_RDONLY);
+	fd = open(argv[1], O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
-		printf("\tGNL = %s\n", line);
+		printf("\tGNL = %s", line);
 		free(line);
 	}
 	if (line != NULL)
 		ft_putendl((unsigned char *)line);
-	printf("\tGNL = %s\n", line);
+	printf("\tGNL = %s", line);
 	free(line);
 	close(fd);
 //	system("leaks a.out");

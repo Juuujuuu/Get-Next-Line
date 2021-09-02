@@ -44,8 +44,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t		j;
 	char		*newstr;
 
-//	printf("len = %zu\n", len);
-//	printf("s = %s\n", s);
 	newstr = (char *)malloc(sizeof(char) * (len + 1));
 	if (!newstr)
 		return (NULL);
@@ -94,24 +92,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	j = 0;
 	if (!s2)
 		return (NULL);
-	str = malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2) + 1)));
+	str = (char *)malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2) + 1)));
 	if (str == NULL)
 		return (NULL);
-	if (s1)
+	while (s1 && s1[i])
 	{
-		while (s1[i])
-    	{
-		  str[i] = s1[i];
-		  str[i+1] = 0;
-      	  i++;
-    	}
+		str[i] = s1[i];
+		i++;
 	}
-    while (s2[j])
-    {
-    	str[i + j] = s2[j];
-		str[j+i+1] = 0;
-        j++;
-    }
+	while (s2[j])
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
 	str[i + j] = '\0';
 	return (str);
 }

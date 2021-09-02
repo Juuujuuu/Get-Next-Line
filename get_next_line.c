@@ -15,27 +15,25 @@
 #include <stdio.h>
 //# define BUFFER_SIZE 10000
 
-char	*savemore(char **save, char **line) // fonction qui cree une nouvelle string pour garder ce que j'ai pas encore return 
+char	*savemore(char **save, char **line)
 {
-	//printf("COUCOU JE SUIS DANS SAVEMORE\n");
 	char	*newsave;
 
 	newsave = NULL;
 	if (ft_strchr(*save, '\n') != NULL)
 	{
-		newsave = ft_substr(*save, ft_strlen(*line), ft_strlen(*save)); // je recupere ce qu'il reste et je le place dans newsave
+		newsave = ft_substr(*save, ft_strlen(*line), ft_strlen(*save));
 		free(*save);
 		*save = newsave;
 	}
 	return (*save);
 }
 
-char	*saveless(char *buf, char **save) // fonction qui permet de join avec ce que j'ai obtenu precedemment 
+char	*saveless(char *buf, char **save)
 {
-	//printf("COUCOU JE SUIS DANS SAVELESS\n");
 	char	*join;
 
-	if ((!*save || ft_strchr(*save, '\n') == NULL) && buf) // si on a pas une ligne complete 
+	if ((!*save || ft_strchr(*save, '\n') == NULL) && buf)
 	{
 		join = ft_strjoin(*save, buf);
 		free(*save);
@@ -46,13 +44,25 @@ char	*saveless(char *buf, char **save) // fonction qui permet de join avec ce qu
 
 void	savemanage(char *buf, char **save, char **line)
 {
-	if (ft_strchr(*save, '\n') == NULL) //  si !ligne, join
+	if (ft_strchr(*save, '\n') == NULL)
 		*save = saveless(buf, save);
-	if (ft_strchr(*save, '\n') != NULL) // si ligne, substr 
+	if (ft_strchr(*save, '\n') != NULL)
 	{
 		*line = ft_substr(*save, 0, ft_findline(*save) + 1);
 		*save = savemore(save, line);
 	}
+}
+
+int	readtillend(ssize_t *retread, int fd, char *buf, char **save)
+{
+	*retread = read(fd, buf, BUFFER_SIZE);
+	buf[*retread] = '\0';
+	if (!*retread)
+	{
+		free(*save);
+		return (1);
+	}
+	return (0);
 }
 
 char	*get_next_line(int fd)
@@ -63,26 +73,21 @@ char	*get_next_line(int fd)
 	ssize_t			retread;
 
 	retread = 0;
-	if (read(fd, NULL, 0) == -1)
+	if (read(fd, NULL, 0) == -1 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!save || (ft_strchr(save, '\n') == NULL)) // si ma save est null ou si je n'ai pas de ligne dans save, alors je read
+	if (!save || (ft_strchr(save, '\n') == NULL))
 	{
-		retread = read(fd, buf, BUFFER_SIZE);
-		buf[retread] = '\0';//je marque la fin de la lecture 
-		if (!retread) // si j'ai deja lu la fin du fichier
-		{
-			free(save);
+		if (readtillend(&retread, fd, buf, &save) == 1)
 			return (NULL);
-		}
-		save = saveless(buf, &save); // je fais un strjoin dans save de ce que j ai lu
-		while (ft_strchr(buf, '\n') == NULL && retread == BUFFER_SIZE) // tant que j'ai pas une ligne complete dans buf et que je suis pas a EOF 
+		save = saveless(buf, &save);
+		while (ft_strchr(buf, '\n') == NULL && retread == BUFFER_SIZE)
 		{
-			retread = read(fd, buf, BUFFER_SIZE); //je place le retour de read 
-			buf[retread] = '\0'; // je mets un \0 pour signaler la fin de la lecture 
-			save = saveless(buf, &save); // je fais un strjoin dans save de ce que j ai lu
+			retread = read(fd, buf, BUFFER_SIZE);
+			buf[retread] = '\0';
+			save = saveless(buf, &save);
 		}
-		if (retread != BUFFER_SIZE) //si je suis a l'EOF 
-			save = saveless("\n", &save); // je rajoute un \n artificiel a save
+		if (retread != BUFFER_SIZE)
+			save = saveless("\n", &save);
 	}
 	savemanage(buf, &save, &line);
 	return (line);
