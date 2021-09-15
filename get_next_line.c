@@ -57,7 +57,7 @@ int	readtillend(ssize_t *retread, int fd, char *buf, char **save)
 {
 	*retread = read(fd, buf, BUFFER_SIZE);
 	buf[*retread] = '\0';
-	if (!*retread)
+	if (!*retread && save)
 	{
 		free(*save);
 		return (1);
@@ -73,9 +73,10 @@ char	*get_next_line(int fd)
 	ssize_t			retread;
 
 	retread = 0;
+	line = NULL;
 	if (read(fd, NULL, 0) == -1 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!save || (ft_strchr(save, '\n') == NULL))
+	if (!save || (ft_strchr(save, '\n') == NULL)) // pour le premier appel et si pas de ligne dispo dans save
 	{
 		if (readtillend(&retread, fd, buf, &save) == 1)
 			return (NULL);
@@ -87,8 +88,12 @@ char	*get_next_line(int fd)
 			save = saveless(buf, &save);
 		}
 		if (retread != BUFFER_SIZE)
-			save = saveless("\n", &save);
+		{	
+			//save = saveless("\n", &save);
+			line = ft_substr(save, ft_strlen(line), ft_strlen(save));
+			//free(save);
+		}
 	}
-	savemanage(buf, &save, &line);
+	savemanage(buf, &save, &line); // sinon 
 	return (line);
 }

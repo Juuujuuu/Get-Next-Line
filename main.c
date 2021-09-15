@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
 #include "get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
@@ -44,4 +45,28 @@ int			main(int argc, char **argv)
 	close(fd);
 //	system("leaks a.out");
 	return (0);
+}*/
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include "get_next_line.h"
+
+int main()
+{
+    int        fd;
+    char    *line;
+    int        i;
+
+    i = 1;
+    fd = open("test.txt", O_RDWR);
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("Ligne %d --> %s", i, line);
+        free(line);
+        i++;
+    }
+    return (0);
 }
