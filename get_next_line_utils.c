@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
+/*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/02 16:16:24 by julmarti          #+#    #+#             */
-/*   Updated: 2021/07/17 17:16:08 by julmarti         ###   ########.fr       */
+/*   Created: 2021/09/17 15:24:46 by julmarti          #+#    #+#             */
+/*   Updated: 2021/09/17 20:30:12 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ size_t	ft_findline(const char *s)
 	return (i);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len, int macdo)
 {
 	size_t		i;
 	size_t		j;
@@ -59,6 +59,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		i++;
 	}
 	newstr[j] = '\0';
+	if (macdo)
+		free(s);
 	return (newstr);
 }
 
@@ -82,7 +84,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	int		i;
 	int		j;
@@ -91,7 +93,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	j = 0;
 	if (!s2)
+	{
+		free(s1);
 		return (NULL);
+	}	
 	str = (char *)malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2) + 1)));
 	if (str == NULL)
 		return (NULL);
@@ -100,6 +105,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		str[i] = s1[i];
 		i++;
 	}
+	free(s1);
 	while (s2[j])
 	{
 		str[i + j] = s2[j];

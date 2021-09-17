@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julmarti <julmarti@42.student.fr>          +#+  +:+       +#+        */
+/*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:46:03 by julmarti          #+#    #+#             */
-/*   Updated: 2021/07/16 19:13:59 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/09/17 17:31:15 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int main()
     fd = open("test.txt", O_RDWR);
     while ((line = get_next_line(fd)) != NULL)
     {
-        printf("Ligne %d --> %s", i, line);
+        printf("Ligne %d --> %s\n", i, line);
         free(line);
         i++;
     }
