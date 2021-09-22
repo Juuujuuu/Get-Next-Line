@@ -6,7 +6,7 @@
 /*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:46:03 by julmarti          #+#    #+#             */
-/*   Updated: 2021/09/17 17:31:15 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/09/22 16:31:54 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int main()
     int        i;
 
     i = 1;
-    fd = open("test.txt", O_RDWR);
+    fd = open("gnlTester/files/big_line_no_nl", O_RDWR);
     while ((line = get_next_line(fd)) != NULL)
     {
         printf("Ligne %d --> %s\n", i, line);

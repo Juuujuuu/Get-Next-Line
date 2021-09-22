@@ -6,13 +6,12 @@
 /*   By: julmarti <julmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:24:46 by julmarti          #+#    #+#             */
-/*   Updated: 2021/09/17 20:30:12 by julmarti         ###   ########.fr       */
+/*   Updated: 2021/09/22 17:50:09 by julmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "get_next_line.h"
-#include <stdio.h>
 
 size_t	ft_strlen(const char *s)
 {
@@ -40,9 +39,9 @@ size_t	ft_findline(const char *s)
 
 char	*ft_substr(char *s, unsigned int start, size_t len, int macdo)
 {
+	char		*newstr;
 	size_t		i;
 	size_t		j;
-	char		*newstr;
 
 	newstr = (char *)malloc(sizeof(char) * (len + 1));
 	if (!newstr)
@@ -92,13 +91,8 @@ char	*ft_strjoin(char *s1, char const *s2)
 
 	i = 0;
 	j = 0;
-	if (!s2)
-	{
-		free(s1);
-		return (NULL);
-	}	
 	str = (char *)malloc(sizeof(char) * ((ft_strlen(s1) + ft_strlen(s2) + 1)));
-	if (str == NULL)
+	if (!s2 || str == NULL)
 		return (NULL);
 	while (s1 && s1[i])
 	{
